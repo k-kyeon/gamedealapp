@@ -25,8 +25,17 @@ const GameDeals = ({ cart, setCart }) => {
   }, []);
 
   const addToCart = (deal) => {
-    if (!cart.find((item) => item.dealID === deal.dealID)) {
-      setCart([...cart, deal]);
+    const existingItem = cart.find((item) => item.dealID === deal.dealID);
+    if (existingItem) {
+      setCart(
+        cart.map((item) =>
+          item.dealID === deal.dealID
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      setCart([...cart, { ...deal, quantity: 1 }]);
     }
   };
 
