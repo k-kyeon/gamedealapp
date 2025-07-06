@@ -49,6 +49,7 @@ const GameDeals = ({ cart, setCart }) => {
         <Link to="/cart" className="relative">
           <div className="bg-white rounded-4xl p-2">
             <img src="shoppingcart.png" className="w-9.5 h-9.5" />
+
             {cart.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
                 {cart.length}

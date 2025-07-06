@@ -2,19 +2,39 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GameDeals from "./pages/GameDeals";
 import CartPage from "./pages/CartPage";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import SignIn from "./pages/SignIn";
 
 const App = () => {
   const [cart, setCart] = useState([]);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<GameDeals cart={cart} setCart={setCart} />} />
-        <Route
-          path="/cart"
-          element={<CartPage cart={cart} setCart={setCart} />}
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <>
+            <SignedIn>
+              <GameDeals cart={cart} setCart={setCart} />
+            </SignedIn>
+            <SignedOut>
+              <SignIn />
+            </SignedOut>
+          </>
+        }
+      />
+
+      <Route
+        path="/cart"
+        element={
+          <>
+            <SignedIn>
+              <CartPage cart={cart} setCart={setCart} />
+            </SignedIn>
+          </>
+        }
+      />
+    </Routes>
   );
 };
 
