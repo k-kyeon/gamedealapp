@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const CartPage = ({ cart, setCart }) => {
   const removeFromCart = (dealID) => {
@@ -7,18 +7,14 @@ const CartPage = ({ cart, setCart }) => {
 
   const increaseQuantity = (dealID) => {
     setCart(
-      cart.map((item) =>
-        item.dealID === dealID ? { ...item, quantity: item.quantity + 1 } : item
-      )
+      cart.map((item) => (item.dealID === dealID ? { ...item, quantity: item.quantity + 1 } : item))
     );
   };
 
   const decreaseQuantity = (dealID) => {
     setCart(
       cart.map((item) =>
-        item.dealID === dealID
-          ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
-          : item
+        item.dealID === dealID ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item
       )
     );
   };
@@ -45,13 +41,9 @@ const CartPage = ({ cart, setCart }) => {
                       <h3 className="font-semibold">{item.title}</h3>
                       <p>Sale Price: ${item.salePrice}</p>
                       <div className="flex gap-4 mt-2 items-center">
-                        <button onClick={() => increaseQuantity(item.dealID)}>
-                          +
-                        </button>
+                        <button onClick={() => increaseQuantity(item.dealID)}>+</button>
                         <p>{item.quantity}</p>
-                        <button onClick={() => decreaseQuantity(item.dealID)}>
-                          -
-                        </button>
+                        <button onClick={() => decreaseQuantity(item.dealID)}>-</button>
                         <button
                           onClick={() => removeFromCart(item.dealID)}
                           className="text-red-500 underline"
@@ -70,11 +62,7 @@ const CartPage = ({ cart, setCart }) => {
               <p className=" font-bold text-lg mr-10">
                 Total Price: $
                 {cart
-                  .reduce(
-                    (sum, item) =>
-                      sum + item.quantity * parseFloat(item.salePrice),
-                    0
-                  )
+                  .reduce((sum, item) => sum + item.quantity * parseFloat(item.salePrice), 0)
                   .toFixed(2)}
               </p>
               <p>*Tax not included*</p>
