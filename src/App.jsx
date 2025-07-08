@@ -4,12 +4,16 @@ import GameDeals from "./pages/GameDeals";
 import CartPage from "./pages/CartPage";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 const App = () => {
   const [cart, setCart] = useState([]);
 
   return (
     <Routes>
+      <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/sign-up" element={<SignUp />} />
+
       <Route
         path="/"
         element={
