@@ -17,7 +17,9 @@ import {
 } from '@/components/ui/form';
 import { useState } from 'react';
 import { CircleLoader } from 'react-spinners';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { account } from '@/lib/appwrite/config';
+import { ID } from 'appwrite';
 
 const signInSchema = z.object({
   email: z.string().email(),
@@ -31,8 +33,10 @@ const signUpSchema = z.object({
 });
 
 const AuthForm = ({ type }) => {
-  const [isLoading, setIsLoading] = useState(FontFaceSetLoadEvent);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate();
 
   const formSchema = type === 'sign-in' ? signInSchema : signUpSchema;
 
@@ -47,8 +51,28 @@ const AuthForm = ({ type }) => {
 
   // 2. Define a submit handler.
   const onSubmit = async (values) => {
-    // ✅ This will be type-safe and validated.
-    console.log('Form values: ', values);
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      if (type === 'sign-up') {
+        // Create account
+        await account.create(ID.unique(), values.email, values.password, values.name);
+
+        // Immediately sign in after sign-up
+        await account.createSession(values.email, values.password);
+      } else {
+        // Sign in
+        await account.createSession(values.email, values.password);
+      }
+
+      // Redirect to home
+      navigate('/');
+    } catch (error) {
+      setErrorMessage(error.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -89,6 +113,19 @@ const AuthForm = ({ type }) => {
                       <Input placeholder="johndoe@example.com" {...field} />
                     </FormControl>
                     <FormDescription>This is the email you will log in with.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

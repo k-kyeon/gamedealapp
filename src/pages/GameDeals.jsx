@@ -41,7 +41,7 @@ const GameDeals = ({ cart, setCart }) => {
   if (loading) return <div>Loading deals...</div>;
 
   return (
-    <div className="flex flex-col min-h-screen w-full border border-red-400">
+    <div className="flex flex-col min-h-screen w-full border border-red-400 bg-blue-300">
       <div className="flex w-full justify-between items-center p-2">
         <h1 className="">Game Deals</h1>
         <Link to="/cart" className="relative">
