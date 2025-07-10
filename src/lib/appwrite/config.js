@@ -5,7 +5,6 @@ export const appwriteConfig = {
   projectId: import.meta.env.VITE_PUBLIC_APPWRITE_PROJECT,
   databaseId: import.meta.env.VITE_PUBLIC_APPWRITE_DATABASE,
   usersCollectionId: import.meta.env.VITE_PUBLIC_APPWRITE_USERS_COLLECTION,
-  secretKey: import.meta.env.VITE_APPWRITE_SECRET,
 };
 
 const client = new Client()

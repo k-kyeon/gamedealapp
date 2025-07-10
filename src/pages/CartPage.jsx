@@ -20,7 +20,7 @@ const CartPage = ({ cart, setCart }) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-sky-100 min-h-screen">
       <Link to="/" className="text-blue-500 underline">
         ← Back to Deals
       </Link>
@@ -34,16 +34,29 @@ const CartPage = ({ cart, setCart }) => {
             <p>Total items: {cart.length}</p>
             {cart.map((item) => (
               <>
-                <li key={item.dealID} className="border rounded p-4">
+                <li
+                  key={item.dealID}
+                  className="border rounded-2xl p-4 shadow shadow-black bg-white md:w-1/2 lg:w-1/4"
+                >
                   <div className="flex flex-row">
                     <img src={item.thumb} className="w-40 h-30 mr-3" />
                     <div>
                       <h3 className="font-semibold">{item.title}</h3>
                       <p>Sale Price: ${item.salePrice}</p>
                       <div className="flex gap-4 mt-2 items-center">
-                        <button onClick={() => increaseQuantity(item.dealID)}>+</button>
+                        <button
+                          onClick={() => increaseQuantity(item.dealID)}
+                          className="rounded-4xl border border-black"
+                        >
+                          +
+                        </button>
                         <p>{item.quantity}</p>
-                        <button onClick={() => decreaseQuantity(item.dealID)}>-</button>
+                        <button
+                          onClick={() => decreaseQuantity(item.dealID)}
+                          className="rounded-4xl border border-black"
+                        >
+                          -
+                        </button>
                         <button
                           onClick={() => removeFromCart(item.dealID)}
                           className="text-red-500 underline"
@@ -67,7 +80,7 @@ const CartPage = ({ cart, setCart }) => {
               </p>
               <p>*Tax not included*</p>
             </div>
-            <button>Continue</button>
+            <button className="bg-white rounded-4xl border shadow shadow-black">Continue</button>
           </div>
         </>
       )}

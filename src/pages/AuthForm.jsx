@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form';
 import { useState } from 'react';
 import { CircleLoader } from 'react-spinners';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { account } from '@/lib/appwrite/config';
 import { ID } from 'appwrite';
 
@@ -45,6 +45,7 @@ const AuthForm = ({ type }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
+      password: '',
       name: '',
     },
   });
@@ -82,7 +83,7 @@ const AuthForm = ({ type }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col w-full min-h-screen bg-blue-100 justify-center items-center border-2 border-red-600"
         >
-          <div className="w-3/4 bg-white p-20 rounded-4xl">
+          <div className="md:w-2/3 lg:w-2/5 bg-white p-20 rounded-4xl">
             <div className="flex flex-col space-y-8 ">
               <h1 className="font-bold">{type === 'sign-in' ? 'Sign In' : 'Sign Up'}</h1>
 
@@ -134,9 +135,13 @@ const AuthForm = ({ type }) => {
 
             <div className="flex flex-col items-center">
               <Button type="submit" className="mt-7 w-3/4" disabled={isLoading}>
-                {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
-
-                {isLoading && <CircleLoader color="#ffffff" size={25} className="ml-2" />}
+                {isLoading ? (
+                  <CircleLoader color="#ffffff" size={20} />
+                ) : type === 'sign-in' ? (
+                  'Sign In'
+                ) : (
+                  'Sign Up'
+                )}
               </Button>
 
               {errorMessage && <p>{errorMessage}</p>}
