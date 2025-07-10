@@ -61,10 +61,10 @@ const AuthForm = ({ type }) => {
         await account.create(ID.unique(), values.email, values.password, values.name);
 
         // Immediately sign in after sign-up
-        await account.createSession(values.email, values.password);
+        await account.createEmailPasswordSession(values.email, values.password);
       } else {
         // Sign in
-        await account.createSession(values.email, values.password);
+        await account.createEmailPasswordSession(values.email, values.password);
       }
 
       // Redirect to home
