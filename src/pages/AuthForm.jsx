@@ -18,8 +18,8 @@ import {
 import { useState } from 'react';
 import { CircleLoader } from 'react-spinners';
 import { Link, useNavigate } from 'react-router-dom';
-import { account } from '@/lib/appwrite/config';
-import { ID } from 'appwrite';
+import { account, appwriteConfig, databases } from '@/lib/appwrite/config';
+import { ID, Query } from 'appwrite';
 
 const signInSchema = z.object({
   email: z.string().email(),
@@ -35,6 +35,7 @@ const signUpSchema = z.object({
 const AuthForm = ({ type }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -55,25 +56,88 @@ const AuthForm = ({ type }) => {
     setIsLoading(true);
     setErrorMessage('');
 
-    try {
-      if (type === 'sign-up') {
-        // Create account
-        await account.create(ID.unique(), values.email, values.password, values.name);
+    if (type === 'sign-in') {
+      try {
+        try {
+          await account.deleteSession('current');
+        } catch (err) {
+          // No active session, continue
+        }
 
-        // Immediately sign in after sign-up
+        // Create session
         await account.createEmailPasswordSession(values.email, values.password);
-      } else {
-        // Sign in
-        await account.createEmailPasswordSession(values.email, values.password);
+
+        // Get the logged-in user's account ID
+        const user = await account.get();
+
+        // Fetch the user's document from Appwrite database
+        const userDoc = await databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.usersCollectionId,
+          [Query.equal('accountId', user.$id)]
+        );
+
+        const userData = userDoc.documents[0];
+
+        if (!userData) {
+          setErrorMessage('User not found. Please contact support.');
+          return;
+        }
+
+        if (userData.status !== 'approved') {
+          setErrorMessage('Account not yet approved by admin.');
+          await account.deleteSession('current');
+          return;
+        }
+
+        // Redirect based on role
+        if (userData.role === 'admin') {
+          console.log(userData.role);
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        setErrorMessage(error.message || 'Login failed');
+      } finally {
+        setIsLoading(false);
       }
-
-      // Redirect to home
-      navigate('/');
-    } catch (error) {
-      setErrorMessage(error.message || 'Something went wrong');
-    } finally {
-      setIsLoading(false);
     }
+
+    if (type === 'sign-up') {
+      try {
+        // Create account
+        const newUser = await account.create(
+          ID.unique(),
+          values.email,
+          values.password,
+          values.name
+        );
+
+        // Add to 'users' collection
+        await databases.createDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.usersCollectionId,
+          ID.unique(),
+          {
+            accountId: newUser.$id,
+            email: values.email,
+            name: values.name,
+            role: 'customer',
+            status: 'pending',
+          }
+        );
+
+        setSuccessMessage('Account created. Waiting for admin approval.');
+        navigate('/sign-in');
+      } catch (error) {
+        setErrorMessage(error.message || 'Sign up failed');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    // TODO: Send email to admin about new signup
   };
 
   return (
@@ -144,7 +208,8 @@ const AuthForm = ({ type }) => {
                 )}
               </Button>
 
-              {errorMessage && <p>{errorMessage}</p>}
+              {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+              {successMessage && <p className="text-green-600">{successMessage}</p>}
 
               <div className="flex justify-center mt-5">
                 <p className="text-gray-800">

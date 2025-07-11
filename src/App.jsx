@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import GameDeals from './pages/GameDeals';
 import CartPage from './pages/CartPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import { account } from './lib/appwrite/config';
+import AdminDashboard from './pages/AdminDashboard';
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -29,7 +30,20 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<GameDeals cart={cart} setCart={setCart} />} />
+      <Route
+        path="/"
+        element={
+          account?.role === 'customer' ? (
+            <GameDeals cart={cart} setCart={setCart} />
+          ) : (
+            <Navigate to="/sign-in" />
+          )
+        }
+      />
+      <Route
+        path="/admin-dashboard"
+        element={account?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />}
+      />
       <Route path="/cart" element={<CartPage cart={cart} setCart={setCart} />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
