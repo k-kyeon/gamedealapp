@@ -1,53 +1,55 @@
-import { appwriteConfig, databases } from '@/lib/appwrite/config';
-import { Query } from 'appwrite';
-import React, { useEffect, useState } from 'react';
+import AdminSidebar from '@/components/AdminSidebar';
+import { account } from '@/lib/appwrite/config';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Home } from 'lucide-react';
+import PendingUserApprovals from '@/components/PendingUserApprovals';
+import DashboardView from '@/components/DashboardView';
+import OrderHistory from '@/components/OrderHistory';
 
 const AdminDashboard = () => {
-  const [pendingUsers, setPendingUsers] = useState([]);
+  const navigate = useNavigate();
+  const handleSignOut = async () => {
+    await account.deleteSession('current');
+    navigate('/sign-in');
+  };
 
-  useEffect(() => {
-    const fetchPendingUsers = async () => {
-      const res = await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.usersCollectionId,
-        [Query.equal('status', 'pending')]
-      );
-      setPendingUsers(res.documents);
-    };
+  const [activePage, setActivePage] = useState('dashboard');
 
-    fetchPendingUsers();
-  }, []);
-
-  const approveUser = async (userId) => {
-    await databases.updateDocument(
-      import.meta.env.VITE_PUBLIC_APPWRITE_DATABASE,
-      import.meta.env.VITE_PUBLIC_APPWRITE_USERS_COLLECTION,
-      userId,
-      { status: 'approved' }
-    );
-    setPendingUsers((prev) => prev.filter((u) => u.$id !== userId));
+  const renderPage = () => {
+    switch (activePage) {
+      case 'dashboard':
+        return <DashboardView />;
+      case 'pending-users':
+        return <PendingUserApprovals />;
+      case 'order-history':
+        return <OrderHistory />;
+      default:
+        return <DashboardView />;
+    }
   };
 
   return (
-    <div className="p-10">
-      <h1 className="text-xl font-bold">Pending User Approvals</h1>
-      <ul>
-        {pendingUsers.map((user) => (
-          <li key={user.$id} className="flex justify-between border-b py-2">
-            <div>
-              <p>
-                {user.name} ({user.email})
-              </p>
-            </div>
-            <button
-              className="bg-green-500 text-white px-4 py-1 rounded"
-              onClick={() => approveUser(user.$id)}
-            >
-              Approve
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col p-10 min-h-screen bg-gray-600">
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center gap-x-4">
+          <Home />
+          <h1>Company</h1>
+        </div>
+
+        <button onClick={handleSignOut} className=" bg-red-300 border rounded-4xl">
+          Sign Out
+        </button>
+      </div>
+
+      <h1 className="text-xl font-bold">Welcome Admin</h1>
+
+      <div className="flex w-full gap-x-2 min-h-screen">
+        <div>
+          <AdminSidebar activePage={activePage} setActivePage={setActivePage} />
+        </div>
+        <div className="flex-1 bg-gray-100 p-6">{renderPage()}</div>
+      </div>
     </div>
   );
 };

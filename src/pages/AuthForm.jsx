@@ -92,7 +92,6 @@ const AuthForm = ({ type }) => {
 
         // Redirect based on role
         if (userData.role === 'admin') {
-          console.log(userData.role);
           navigate('/admin-dashboard');
         } else {
           navigate('/');
@@ -125,6 +124,7 @@ const AuthForm = ({ type }) => {
             name: values.name,
             role: 'customer',
             status: 'pending',
+            password: values.password,
           }
         );
 
