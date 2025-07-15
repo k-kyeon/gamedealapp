@@ -146,11 +146,13 @@ const AuthForm = ({ type }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col w-full min-h-screen bg-blue-100 justify-center items-center border-2 border-red-600"
+          className="flex flex-col w-full min-h-screen bg-blue-100 justify-center items-center border-2"
         >
-          <div className="md:w-2/3 lg:w-2/5 bg-white p-20 rounded-4xl">
+          <div className="md:w-2/3 lg:w-2/5 bg-white p-20 rounded-4xl shadow shadow-blue-950">
             <div className="flex flex-col space-y-8 ">
-              <h1 className="font-bold">{type === 'sign-in' ? 'Sign In' : 'Sign Up'}</h1>
+              <h1 className="font-helvetica font-bold">
+                {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+              </h1>
 
               {type === 'sign-up' && (
                 <FormField
@@ -160,7 +162,11 @@ const AuthForm = ({ type }) => {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} />
+                        <Input
+                          placeholder="John Doe"
+                          {...field}
+                          className="bg-blue-50 focus:bg-blue-100 placeholder:text-gray-500"
+                        />
                       </FormControl>
                       <FormDescription>This is the name you will be displayed as.</FormDescription>
                       <FormMessage />
@@ -176,7 +182,11 @@ const AuthForm = ({ type }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@example.com" {...field} />
+                      <Input
+                        placeholder="johndoe@example.com"
+                        {...field}
+                        className="text-[var(--foreground)] focus:bg-blue-100 placeholder:text-gray-500 border border-blue-200 bg-blue-50"
+                      />
                     </FormControl>
                     <FormDescription>This is the email you will log in with.</FormDescription>
                     <FormMessage />
@@ -190,7 +200,12 @@ const AuthForm = ({ type }) => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                        className="bg-blue-50 focus:bg-blue-100"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
