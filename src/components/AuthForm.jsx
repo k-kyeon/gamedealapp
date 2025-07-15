@@ -60,8 +60,9 @@ const AuthForm = ({ type }) => {
       try {
         try {
           await account.deleteSession('current');
-        } catch (err) {
+        } catch (error) {
           // No active session, continue
+          setErrorMessage(error.message);
         }
 
         // Create session

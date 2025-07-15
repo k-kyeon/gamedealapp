@@ -15,6 +15,11 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
+  const [sessionUpdated, setSessionUpdated] = useState(false);
+
+  useEffect(() => {
+    setSessionUpdated((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -33,6 +38,7 @@ const App = () => {
         if (!userData || userData.status !== 'approved') {
           await account.deleteSession('current');
           setIsAuthenticated(false);
+          setRole(null);
           navigate('/sign-in');
           return;
         }
@@ -41,12 +47,13 @@ const App = () => {
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
+        setRole(null);
         navigate('/sign-in');
       }
     };
 
     checkSession();
-  }, []);
+  }, [sessionUpdated]);
 
   if (isAuthenticated === null) return <div className="text-center mt-20">Loading...</div>;
 
@@ -68,7 +75,13 @@ const App = () => {
       />
       <Route
         path="/admin-dashboard"
-        element={isAuthenticated && role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />}
+        element={
+          <AdminDashboard
+            setSessionUpdated={setSessionUpdated}
+            setIsAuthenticated={setIsAuthenticated}
+            setRole={setRole}
+          />
+        }
       />
       <Route path="/cart" element={<CartPage cart={cart} setCart={setCart} />} />
       <Route path="/sign-in" element={<SignIn />} />

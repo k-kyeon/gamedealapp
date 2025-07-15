@@ -29,23 +29,28 @@ const PendingUserApprovals = () => {
   };
 
   return (
-    <ul className="border-red-500 border">
-      <h1 className="text-lg">Pending User Approvals</h1>
+    <ul className="">
+      <h1 className="text-lg mb-5">Pending User Approvals</h1>
       {pendingUsers.map((user) => (
-        <li key={user.$id} className="flex justify-between border-b py-2">
+        <li
+          key={user.$id}
+          className="flex justify-between border border-gray-400 bg-gray-200 rounded-xl p-3"
+        >
           <div>
             <p>
               {user.name} ({user.email})
             </p>
           </div>
 
-          <button
-            className="bg-green-500 text-white px-4 py-1 rounded"
-            onClick={() => approveUser(user.$id)}
-          >
-            Approve
-          </button>
-          <button className="bg-red-500">Deny</button>
+          <div className="flex flex-row justify-between gap-x-2">
+            <button
+              className="bg-green-400 text-gray-900 rounded-2xl"
+              onClick={() => approveUser(user.$id)}
+            >
+              Approve
+            </button>
+            <button className="bg-red-400 text-gray-900 rounded-2xl">Deny</button>
+          </div>
         </li>
       ))}
     </ul>

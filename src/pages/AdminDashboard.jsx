@@ -7,11 +7,22 @@ import PendingUserApprovals from '@/components/PendingUserApprovals';
 import DashboardView from '@/components/DashboardView';
 import OrderHistory from '@/components/OrderHistory';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ setSessionUpdated, setRole, setIsAuthenticated }) => {
   const navigate = useNavigate();
   const handleSignOut = async () => {
-    await account.deleteSession('current');
-    navigate('/sign-in');
+    try {
+      await account.deleteSession('current');
+    } catch (err) {
+      console.error('Failed to delete session', err);
+    }
+
+    setRole(null);
+    setIsAuthenticated(false);
+
+    setTimeout(() => {
+      setSessionUpdated((prev) => !prev); // Trigger session check
+      navigate('/sign-in');
+    }, 100);
   };
 
   const [activePage, setActivePage] = useState('dashboard');
@@ -37,18 +48,18 @@ const AdminDashboard = () => {
           <h1>Company</h1>
         </div>
 
-        <button onClick={handleSignOut} className=" bg-red-300 border rounded-4xl">
+        <button onClick={handleSignOut} className=" bg-red-300  rounded-4xl">
           Sign Out
         </button>
       </div>
 
-      <h1 className="text-xl font-bold">Welcome Admin</h1>
+      <h1 className="text-xl font-bold text-gray-200 mt-4 mb-3">Welcome Admin</h1>
 
-      <div className="flex w-full gap-x-2 min-h-screen">
+      <div className="flex w-full gap-x-3 min-h-screen">
         <div>
           <AdminSidebar activePage={activePage} setActivePage={setActivePage} />
         </div>
-        <div className="flex-1 bg-gray-100 p-6">{renderPage()}</div>
+        <div className="flex-1 bg-gray-100 p-6 rounded-xl">{renderPage()}</div>
       </div>
     </div>
   );

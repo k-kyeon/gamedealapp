@@ -15,10 +15,10 @@ const menuItems = [
 
 export default function AdminSidebar({ activePage, setActivePage }) {
   return (
-    <NavigationMenu className="w-64 bg-gray-900 text-white p-4 border border-blue-400 rounded-lg shadow-md">
-      <NavigationMenuList className="flex flex-col w-full space-y-1 border border-orange-400">
+    <NavigationMenu className="w-64 bg-gray-900 text-white p-4 rounded-lg shadow-md">
+      <NavigationMenuList className="flex flex-col w-full space-y-1">
         {menuItems.map((item) => (
-          <NavigationMenuItem key={item.to} className="w-full border border-green-300">
+          <NavigationMenuItem key={item.to} className="w-full">
             <NavigationMenuLink asChild>
               <button
                 onClick={() => setActivePage(item.key)}
