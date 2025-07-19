@@ -48,23 +48,24 @@ const GameDeals = ({ cart, setCart }) => {
   if (loading) return <div>Loading deals...</div>;
 
   return (
-    <div className="flex flex-col min-h-screen w-full border border-red-400 bg-sky-200 p-3">
+    <div className="flex flex-col min-h-screen w-full border border-red-400 bg-white p-3">
       <div className="flex w-full justify-between items-center p-2">
-        <h1 className="">Game Deals</h1>
-        <div className="">
+        <h1 className="text-6xl font-extralight">Game Deals</h1>
+        <div className="flex flex-row justify-between items-center space-x-4">
+          <img src="profile.png" className="w-9.5 h-9.5" />
+
           <Link to="/cart" className="relative">
-            <div className="bg-white w-2/4 rounded-4xl p-2">
+            <div className="rounded-4xl p-2">
               <img src="shoppingcart.png" className="w-9.5 h-9.5" />
 
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-14 bg-red-500 text-white text-xs rounded-full px-1">
+              {/* {cart.length > 0 && (
+                <span className="absolute -top-0.5 -right-9 bg-red-500 text-white text-xs rounded-full px-1">
                   {cart.length}
                 </span>
-              )}
+              )} */}
             </div>
           </Link>
-
-          <button onClick={handleSignOut} className="mt-2 bg-red-300 border rounded-4xl">
+          <button onClick={handleSignOut} className="bg-red-300 border rounded-4xl">
             Sign Out
           </button>
         </div>
@@ -74,15 +75,24 @@ const GameDeals = ({ cart, setCart }) => {
 
       <ul className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
         {deals.map((deal) => (
-          <li className="border rounded-2xl p-4 m-2 bg-white" key={deal.dealID}>
-            <img src={deal.thumb} alt={deal.title} width={100} className="w-full rounded-2xl" />
-            <h3>{deal.title}</h3>
-            <p>Normal Price: ${deal.normalPrice}</p>
-            <p>Sale Price: ${deal.salePrice}</p>
-            <div className="flex justify-between">
+          <li
+            className="flex flex-col justify-between border rounded-2xl p-4 m-2 shadow-md shadow-[#060f22] bg-[#0b1830ec]"
+            key={deal.dealID}
+          >
+            <img src={deal.thumb} alt={deal.title} className="w-full rounded-2xl h-50" />
+            <div className="mt-2 ml-1 flex-grow">
+              <h3 className="text-2xl text-white font-semibold font-[Helvetica] border-t-2 border-gray-100 mt-1">
+                {deal.title}
+              </h3>
+              <p className="text-white">Normal Price: ${deal.normalPrice}</p>
+              <p className="text-white">
+                Sale Price: <span className="font-medium text-[#19f3bde7]">${deal.salePrice}</span>
+              </p>
+            </div>
+            <div className="self-end">
               <button
                 onClick={() => addToCart(deal)}
-                className="border rounded-xl p-0.5 bg-blue-300"
+                className="border rounded-full bg-gray-200 mt-4"
               >
                 Add to Cart
               </button>

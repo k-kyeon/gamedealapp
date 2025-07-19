@@ -31,7 +31,7 @@ const CartPage = ({ cart, setCart }) => {
       ) : (
         <>
           <ul className="space-y-4">
-            <p>Total items: {cart.length}</p>
+            <p className="font-[Helvetica] font-bold">Total items: {cart.length}</p>
             {cart.map((item) => (
               <>
                 <li
@@ -39,24 +39,29 @@ const CartPage = ({ cart, setCart }) => {
                   className="border rounded-2xl p-4 shadow shadow-black bg-white md:w-1/2 lg:w-1/4"
                 >
                   <div className="flex flex-row">
-                    <img src={item.thumb} className="w-40 h-30 mr-3" />
+                    <div className="">
+                      <img src={item.thumb} className="w-40 h-30 mr-3 border-2 p-0.5" />
+                    </div>
+
                     <div>
                       <h3 className="font-semibold">{item.title}</h3>
                       <p>Sale Price: ${item.salePrice}</p>
-                      <div className="flex gap-4 mt-2 items-center">
-                        <button
-                          onClick={() => increaseQuantity(item.dealID)}
-                          className="rounded-4xl border border-black"
-                        >
-                          +
-                        </button>
-                        <p>{item.quantity}</p>
-                        <button
-                          onClick={() => decreaseQuantity(item.dealID)}
-                          className="rounded-4xl border border-black"
-                        >
-                          -
-                        </button>
+                      <div className="flex flex-row">
+                        <div className="flex gap-4 mt-2 items-center border-2 rounded-3xl bg-gray-400">
+                          <button
+                            onClick={() => increaseQuantity(item.dealID)}
+                            className="rounded-full border border-black bg-white"
+                          >
+                            +
+                          </button>
+                          <p>{item.quantity}</p>
+                          <button
+                            onClick={() => decreaseQuantity(item.dealID)}
+                            className="rounded-full border border-black bg-white"
+                          >
+                            -
+                          </button>
+                        </div>
                         <button
                           onClick={() => removeFromCart(item.dealID)}
                           className="text-red-500 underline"
@@ -70,8 +75,9 @@ const CartPage = ({ cart, setCart }) => {
               </>
             ))}
           </ul>
-          <div className="flex flex-row mt-8">
-            <div>
+          <div className="mt-5 border-stone-700 border"></div>
+          <div className="flex flex-row mt-4">
+            <div className="mt-2">
               <p className=" font-bold text-lg mr-10">
                 Total Price: $
                 {cart
