@@ -36,18 +36,16 @@ const CartPage = ({ cart, setCart }) => {
               <>
                 <li
                   key={item.dealID}
-                  className="border rounded-2xl p-4 shadow shadow-black bg-white md:w-1/2 lg:w-1/4"
+                  className="border rounded-2xl p-4 shadow shadow-black bg-white md:w-2/3 lg:w-2/5"
                 >
                   <div className="flex flex-row">
-                    <div className="">
-                      <img src={item.thumb} className="w-40 h-30 mr-3 border-2 p-0.5" />
-                    </div>
+                    <img src={item.thumb} className="w-40 h-30 mr-4 border-2 p-0.5" />
 
                     <div>
                       <h3 className="font-semibold">{item.title}</h3>
                       <p>Sale Price: ${item.salePrice}</p>
                       <div className="flex flex-row">
-                        <div className="flex gap-4 mt-2 items-center border-2 rounded-3xl bg-gray-400">
+                        <div className="flex gap-4 mt-2 items-center border-1 rounded-4xl bg-gray-300">
                           <button
                             onClick={() => increaseQuantity(item.dealID)}
                             className="rounded-full border border-black bg-white"

@@ -48,21 +48,21 @@ const GameDeals = ({ cart, setCart }) => {
   if (loading) return <div>Loading deals...</div>;
 
   return (
-    <div className="flex flex-col min-h-screen w-full border border-red-400 bg-white p-3">
-      <div className="flex w-full justify-between items-center p-2">
+    <div className="flex flex-col min-h-screen w-full border border-red-400 bg-sky-100 p-3">
+      <div className="flex w-full justify-between items-center p-2 mb-9">
         <h1 className="text-6xl font-extralight">Game Deals</h1>
         <div className="flex flex-row justify-between items-center space-x-4">
-          <img src="profile.png" className="w-9.5 h-9.5" />
+          <img src="profile.png" className="w-6 h-6" />
 
-          <Link to="/cart" className="relative">
+          <Link to="/cart" className="relative flex-shrink-0">
             <div className="rounded-4xl p-2">
-              <img src="shoppingcart.png" className="w-9.5 h-9.5" />
+              <img src="shoppingcart.png" className="w-6 h-6 flex-shrink-0" />
 
-              {/* {cart.length > 0 && (
-                <span className="absolute -top-0.5 -right-9 bg-red-500 text-white text-xs rounded-full px-1">
+              {cart.length > 0 && (
+                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
                   {cart.length}
                 </span>
-              )} */}
+              )}
             </div>
           </Link>
           <button onClick={handleSignOut} className="bg-red-300 border rounded-4xl">
@@ -73,7 +73,7 @@ const GameDeals = ({ cart, setCart }) => {
 
       <Search />
 
-      <ul className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+      <ul className="mt-4 grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
         {deals.map((deal) => (
           <li
             className="flex flex-col justify-between border rounded-2xl p-4 m-2 shadow-md shadow-[#060f22] bg-[#0b1830ec]"
