@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { account, databases, appwriteConfig } from '../lib/appwrite/config';
+import { ID } from 'appwrite';
 
 const CartPage = ({ cart, setCart }) => {
   const removeFromCart = (dealID) => {
@@ -17,6 +19,42 @@ const CartPage = ({ cart, setCart }) => {
         item.dealID === dealID ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item
       )
     );
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      const user = await account.get();
+
+      // Optional: Add a check for empty cart
+      if (cart.length === 0) {
+        alert('Cart is empty.');
+        return;
+      }
+
+      const totalPrice = cart.reduce((sum, item) => sum + parseFloat(item.salePrice), 0);
+
+      const response = await databases.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.ordersCollectionId,
+        ID.unique(),
+        {
+          accountId: user.$id,
+          items: cart.map((item) => JSON.stringify(item)),
+          createdAt: new Date().toISOString(),
+          totalPrice: Math.round(totalPrice * 100),
+          buyer: user.name,
+        }
+      );
+
+      console.log('Order Placed:', response);
+
+      // Clear cart after order
+      setCart([]);
+      alert('Order placed successfully!');
+    } catch (error) {
+      console.error('Order error:', error);
+      alert(`Failed to place order: ${error.message || 'Unknown error'}`);
+    }
   };
 
   return (
@@ -84,7 +122,12 @@ const CartPage = ({ cart, setCart }) => {
               </p>
               <p>*Tax not included*</p>
             </div>
-            <button className="bg-white rounded-4xl border shadow shadow-black">Continue</button>
+            <button
+              onClick={handlePlaceOrder}
+              className="bg-white rounded-4xl border shadow shadow-black"
+            >
+              Continue
+            </button>
           </div>
         </>
       )}

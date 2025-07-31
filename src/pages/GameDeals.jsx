@@ -65,7 +65,7 @@ const GameDeals = ({ cart, setCart }) => {
               )}
             </div>
           </Link>
-          <button onClick={handleSignOut} className="bg-red-300 border rounded-4xl">
+          <button onClick={handleSignOut} className="bg-red-300 border border-rose-400 rounded-4xl">
             Sign Out
           </button>
         </div>
