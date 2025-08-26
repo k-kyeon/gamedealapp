@@ -29,7 +29,7 @@ const PendingUserApprovals = () => {
   };
 
   return (
-    <ul className="">
+    <ul className="p-4 font-bold text-lg">
       <h1 className="text-lg mb-5">Pending User Approvals</h1>
       {pendingUsers.map((user) => (
         <li

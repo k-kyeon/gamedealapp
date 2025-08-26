@@ -7,6 +7,7 @@ import { account } from '@/lib/appwrite/config';
 const GameDeals = ({ cart, setCart }) => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [clickedDeal, setClickedDeal] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +28,9 @@ const GameDeals = ({ cart, setCart }) => {
   }, []);
 
   const addToCart = (deal) => {
+    setClickedDeal(deal.dealID);
+    setTimeout(() => setClickedDeal(null), 200); // reset after 200ms
+
     const existingItem = cart.find((item) => item.dealID === deal.dealID);
     if (existingItem) {
       setCart(
@@ -92,7 +96,9 @@ const GameDeals = ({ cart, setCart }) => {
             <div className="self-end">
               <button
                 onClick={() => addToCart(deal)}
-                className="border rounded-full bg-gray-200 mt-4"
+                className={`border rounded-full bg-gray-200 mt-4  transition-transform duration-200 ${
+                  clickedDeal === deal.dealID ? 'scale-110 bg-gray-400' : 'hover:scale-105'
+                }`}
               >
                 Add to Cart
               </button>

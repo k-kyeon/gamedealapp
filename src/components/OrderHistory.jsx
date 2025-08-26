@@ -21,13 +21,40 @@ const OrderHistory = () => {
     fetchOrders();
   }, []);
 
+  const handleDelete = async (orderId) => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this order? This action cannot be undone.'
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await databases.deleteDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.ordersCollectionId,
+        orderId
+      );
+
+      setOrders((prev) => prev.filter((order) => order.$id !== orderId));
+      alert('Order deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete order', error);
+      alert('Failed to delete order. Please try again.');
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Order History</h2>
       <ul>
         {orders.map((order) => (
           <li key={order.$id} className="mb-4 border p-2 rounded">
-            <p className="font-semibold">User Name: {order.buyer}</p>
+            <div className="flex flex-row justify-between">
+              <p className="font-semibold">User Name: {order.buyer}</p>
+              <button onClick={() => handleDelete(order.$id)} className="text-red-500">
+                Cancel
+              </button>
+            </div>
             <p>Items:</p>
             <ul className="pl-4 list-disc">
               {order.items.map((itemStr, index) => {
