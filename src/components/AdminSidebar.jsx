@@ -8,7 +8,11 @@ import {
 import { Home, Settings, Users } from 'lucide-react';
 
 const menuItems = [
-  { key: 'dashboard', label: 'Admin Dashboard', icon: <Home className="" /> },
+  {
+    key: 'dashboard',
+    label: 'Admin Dashboard',
+    icon: <Home className="" />,
+  },
   { key: 'pending-users', label: 'Pending Users', icon: <Users className="" /> },
   { key: 'order-history', label: 'Order History', icon: <Settings className="" /> },
 ];

@@ -1,59 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import GameDeals from './pages/GameDeals';
 import CartPage from './pages/CartPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import { account, appwriteConfig, databases } from './lib/appwrite/config';
 import AdminDashboard from './pages/AdminDashboard';
 import { Query } from 'appwrite';
 import PendingUserApprovals from './components/PendingUserApprovals';
 import OrderHistory from './components/OrderHistory';
+import useAuthStore from './store/authStore';
 
 const App = () => {
-  const [role, setRole] = useState(null);
   const [cart, setCart] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const navigate = useNavigate();
-  const [sessionUpdated, setSessionUpdated] = useState(false);
+
+  const { role, isAuthenticated, loading, fetchUser, logout } = useAuthStore();
 
   useEffect(() => {
-    setSessionUpdated((prev) => !prev);
-  }, []);
+    // Try to fetch user session on app load
+    fetchUser();
+  }, [fetchUser]);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const user = await account.get();
-
-        // Fetch role from users collection
-        const res = await databases.listDocuments(
-          appwriteConfig.databaseId,
-          appwriteConfig.usersCollectionId,
-          [Query.equal('accountId', user.$id)]
-        );
-
-        const userData = res.documents[0];
-
-        if (!userData || userData.status !== 'approved') {
-          await account.deleteSession('current');
-          setIsAuthenticated(false);
-          setRole(null);
-          navigate('/sign-in');
-          return;
-        }
-
-        setRole(userData.role);
-        setIsAuthenticated(true);
-      } catch {
-        setIsAuthenticated(false);
-        setRole(null);
-        navigate('/sign-in');
-      }
-    };
-
-    checkSession();
-  }, [sessionUpdated]);
+  if (loading) return <div className="text-center mt-20">Loading...</div>;
 
   if (isAuthenticated === null) return <div className="text-center mt-20">Loading...</div>;
 
@@ -73,16 +40,7 @@ const App = () => {
           )
         }
       />
-      <Route
-        path="/admin-dashboard"
-        element={
-          <AdminDashboard
-            setSessionUpdated={setSessionUpdated}
-            setIsAuthenticated={setIsAuthenticated}
-            setRole={setRole}
-          />
-        }
-      />
+      <Route path="/admin-dashboard" element={<AdminDashboard logout={logout} />} />
       <Route path="/cart" element={<CartPage cart={cart} setCart={setCart} />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />

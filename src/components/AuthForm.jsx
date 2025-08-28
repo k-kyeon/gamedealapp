@@ -21,6 +21,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { account, appwriteConfig, databases } from '@/lib/appwrite/config';
 import { ID, Query } from 'appwrite';
 
+import useAuthStore from '@/store/authStore';
+
 const signInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
@@ -36,6 +38,7 @@ const AuthForm = ({ type }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const { fetchUser } = useAuthStore();
 
   const navigate = useNavigate();
 
@@ -67,6 +70,7 @@ const AuthForm = ({ type }) => {
 
         // Create session
         await account.createEmailPasswordSession(values.email, values.password);
+        await fetchUser(); // Updates Zustand with new user
 
         // Get the logged-in user's account ID
         const user = await account.get();

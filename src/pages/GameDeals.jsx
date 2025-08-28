@@ -2,13 +2,25 @@ import { useEffect, useState } from 'react';
 import Search from '../components/search';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { account } from '@/lib/appwrite/config';
+import useAuthStore from '@/store/authStore';
 
 const GameDeals = ({ cart, setCart }) => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [clickedDeal, setClickedDeal] = useState(null);
   const navigate = useNavigate();
+
+  const { user, fetchUser, logout } = useAuthStore();
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/sign-in');
+    }
+  }, [loading, user, navigate]);
 
   useEffect(() => {
     const fetchDeals = async () => {
@@ -44,7 +56,7 @@ const GameDeals = ({ cart, setCart }) => {
   };
 
   const handleSignOut = async () => {
-    await account.deleteSession('current');
+    await logout();
     navigate('/sign-in');
   };
 

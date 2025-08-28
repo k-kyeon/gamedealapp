@@ -1,5 +1,4 @@
 import AdminSidebar from '@/components/AdminSidebar';
-import { account } from '@/lib/appwrite/config';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -7,22 +6,11 @@ import PendingUserApprovals from '@/components/PendingUserApprovals';
 import DashboardView from '@/components/DashboardView';
 import OrderHistory from '@/components/OrderHistory';
 
-const AdminDashboard = ({ setSessionUpdated, setRole, setIsAuthenticated }) => {
+const AdminDashboard = ({ logout }) => {
   const navigate = useNavigate();
   const handleSignOut = async () => {
-    try {
-      await account.deleteSession('current');
-    } catch (err) {
-      console.error('Failed to delete session', err);
-    }
-
-    setRole(null);
-    setIsAuthenticated(false);
-
-    setTimeout(() => {
-      setSessionUpdated((prev) => !prev); // Trigger session check
-      navigate('/sign-in');
-    }, 100);
+    await logout();
+    navigate('/sign-in');
   };
 
   const [activePage, setActivePage] = useState('dashboard');
