@@ -12,10 +12,12 @@ const GameDeals = ({ cart, setCart }) => {
 
   const { user, fetchUser, logout } = useAuthStore();
 
+  // Sync auth state
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
+  // Redirect to sign-in if not logged in
   useEffect(() => {
     if (!loading && !user) {
       navigate('/sign-in');

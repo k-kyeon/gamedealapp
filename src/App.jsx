@@ -5,7 +5,6 @@ import CartPage from './pages/CartPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import AdminDashboard from './pages/AdminDashboard';
-import { Query } from 'appwrite';
 import PendingUserApprovals from './components/PendingUserApprovals';
 import OrderHistory from './components/OrderHistory';
 import useAuthStore from './store/authStore';

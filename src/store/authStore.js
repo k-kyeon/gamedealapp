@@ -7,7 +7,6 @@ const useAuthStore = create((set) => ({
   role: null,
   loading: true,
   isAuthenticated: false,
-  setUser: (user) => set({ user }),
 
   // Fetch user and role
   fetchUser: async () => {
